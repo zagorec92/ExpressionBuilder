@@ -1,6 +1,7 @@
 ﻿using ExpressionBuilder.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 
 namespace ExpressionBuilder.Test
 {
@@ -11,7 +12,7 @@ namespace ExpressionBuilder.Test
 		public void ExpressionNullTest()
 		{
 			ExpressionBuilder<Func<int, bool>> expression = new ExpressionBuilder<Func<int, bool>>();
-			Assert.ThrowsException<ArgumentException>(() => expression.Function);
+			Assert.ThrowsException<ArgumentNullException>(() => expression.Function);
 		}
 
 		[TestMethod]
@@ -76,6 +77,41 @@ namespace ExpressionBuilder.Test
 
 			Assert.AreEqual(true, expression.Function.Invoke(2));
 			Assert.AreEqual(true, expression.Function.Invoke(3));
+		}
+
+		[TestMethod]
+		public void ExpressionRecompileTest()
+		{
+			ExpressionBuilder<Func<int, bool>> expression = new ExpressionBuilder<Func<int, bool>>(x => x == 1);
+			expression.Function.Invoke(1);
+			expression.Or(x => x < 3);
+			Assert.AreEqual(true, expression.Function.Invoke(2));
+		}
+
+		[TestMethod]
+		public void ExpressionCachePerformanceTest()
+		{
+			ExpressionBuilder<Func<int, bool>> expressionNoCache = new ExpressionBuilder<Func<int, bool>>(x => x == 1);
+			expressionNoCache.CacheEnabled = false;
+			ExpressionBuilder<Func<int, bool>> expressionCache = new ExpressionBuilder<Func<int, bool>>(x => x == 1);
+
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			expressionNoCache.Function.Invoke(1);
+			expressionNoCache.Function.Invoke(2);
+			sw.Stop();
+
+			long ticksNoCache = sw.ElapsedTicks;
+
+			sw.Reset();
+			sw.Start();
+			expressionCache.Function.Invoke(1);
+			expressionCache.Function.Invoke(2);
+			sw.Stop();
+
+			long ticksCache = sw.ElapsedTicks;
+
+			Assert.IsTrue((ticksCache * 2) < ticksNoCache);
 		}
 	}
 }

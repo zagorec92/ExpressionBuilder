@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright © zagorec92 2018
+ * Licensed under MIT license.
+ */
+
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
@@ -10,26 +14,28 @@ namespace ExpressionBuilder.Expressions
 	/// <typeparam name="T"></typeparam>
 	public class ParametersUpdateWrapper<T>
 	{
+		#region Fields
+
 		private ReadOnlyCollection<ParameterExpression> _parameters;
 		private ReadOnlyCollection<ParameterExpression> _newParameters;
 		private Expression<T> _expression;
+
+		#endregion
+
+		#region Constructor
 
 		public ParametersUpdateWrapper(Expression<T> expression, ReadOnlyCollection<ParameterExpression> parameters, ReadOnlyCollection<ParameterExpression> newParameters)
 		{
 			_expression = expression;
 			_parameters = parameters;
 			_newParameters = newParameters;
-
-			CheckValidity();
 		}
 
-		private void CheckValidity()
-		{
-			if (_parameters.Count != _newParameters.Count)
-				throw new Exception("Parameter count does not match.");
-		}
+		#endregion
 
-		public Expression<T> Update()
+		#region Methods
+
+		internal Expression<T> Update()
 		{
 			for (int i = 0; i < _parameters.Count; i++)
 			{
@@ -39,5 +45,7 @@ namespace ExpressionBuilder.Expressions
 
 			return _expression;
 		}
+
+		#endregion
 	}
 }

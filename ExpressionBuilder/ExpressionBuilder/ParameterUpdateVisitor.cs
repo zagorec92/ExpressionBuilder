@@ -1,4 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿/*
+ * Copyright © zagorec92 2018
+ * Licensed under MIT license.
+ */
+
+using System.Linq.Expressions;
 
 namespace ExpressionBuilder.Expressions
 {
@@ -14,11 +19,17 @@ namespace ExpressionBuilder.Expressions
 
 		#endregion
 
+		#region Constructor
+
 		public ParameterUpdateVisitor(ParameterExpression oldParameter, ParameterExpression newParameter)
 		{
 			_oldParameter = oldParameter;
 			_newParameter = newParameter;
 		}
+
+		#endregion
+
+		#region Methods
 
 		protected override Expression VisitParameter(ParameterExpression node)
 		{
@@ -27,5 +38,7 @@ namespace ExpressionBuilder.Expressions
 
 			return base.VisitParameter(node);
 		}
+
+		#endregion
 	}
 }

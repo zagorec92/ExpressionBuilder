@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Copyright © zagorec92 2018
+ * Licensed under MIT license.
+ */
+
+using System;
 using System.Linq.Expressions;
 
 namespace ExpressionBuilder.Expressions
@@ -7,24 +12,37 @@ namespace ExpressionBuilder.Expressions
 	{
 		#region Fields
 
+		private bool _cacheEnabled = true;
+		private bool _shouldRecompile = false;
+
+		private T _compiledDelegate;
 		private Expression<T> _expression;
 
 		#endregion
 
 		#region Properties
 
+		public bool CacheEnabled
+		{
+			get { return _cacheEnabled; }
+			set { _cacheEnabled = value; }
+		}
+
 		public T Function
 		{
 			get
 			{
-				T compiledExpression = default(T);
+				if(_cacheEnabled && (_compiledDelegate == null || _shouldRecompile))
+				{
+					if (_expression != null)
+						_compiledDelegate = _expression.Compile();
+					else
+						throw new ArgumentNullException("Expression must not have a null or default value", nameof(_expression));
 
-				if (_expression != null)
-					compiledExpression = _expression.Compile();
-				else
-					throw new ArgumentException("Expression must not have a null or default value", nameof(_expression));
+					_shouldRecompile = false;
+				}
 
-				return compiledExpression;
+				return _cacheEnabled ? _compiledDelegate : _expression.Compile();
 			}
 		}
 
@@ -86,6 +104,7 @@ namespace ExpressionBuilder.Expressions
 		private void UpdateExpression(Expression<T> expression, BinaryExpression binaryExpression)
 		{
 			_expression = Expression.Lambda<T>(binaryExpression, expression.Parameters);
+			_shouldRecompile = true;
 		}
 
 		#endregion
