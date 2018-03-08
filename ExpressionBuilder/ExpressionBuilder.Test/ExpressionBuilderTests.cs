@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace ExpressionBuilder.Test
 {
 	[TestClass]
-	public class Test
+	public class ExpressionBuilderTests
 	{
 		[TestMethod]
 		public void ExpressionNullTest()

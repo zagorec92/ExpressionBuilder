@@ -41,9 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExpressionBuilder.cs" />
+    <Compile Include="ExpressionHelper.cs" />
     <Compile Include="ParameterUpdateVisitor.cs" />
     <Compile Include="ParameterUpdateWrapper.cs" />
+    <Compile Include="PredicateBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryExpression.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
