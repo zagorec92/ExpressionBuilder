@@ -14,8 +14,8 @@ namespace ExpressionBuilder.Expressions
 	{
 		#region Fields
 
-		private ParameterExpression _oldParameter;
-		private ParameterExpression _newParameter;
+		private readonly ParameterExpression _oldParameter;
+		private readonly ParameterExpression _newParameter;
 
 		#endregion
 
